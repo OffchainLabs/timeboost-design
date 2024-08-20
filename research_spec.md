@@ -48,6 +48,6 @@ For a round that will start its active phase at time `t`, the round proceeds lik
 
   This is a modified first come, first served sequencing policy, where the modification is the artificial delay on some transactions before sequencing.
 
-- At t+`RoundLengthSeconds` seconds, the sequencer stops accepting express lane messages for the round. At this time, the round is completed.
+- At t+`RoundDurationSeconds` seconds, the sequencer stops accepting express lane messages for the round. At this time, the round is completed.
 
   
