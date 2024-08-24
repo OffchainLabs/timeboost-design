@@ -404,3 +404,108 @@ interface IExpressLaneAuction is IAccessControlEnumerableUpgradeable, IERC165Upg
     function resolvedRounds() external view returns (ELCRound memory, ELCRound memory);
 }
 ```
+# Offchain Components
+
+## Auctioneer API
+
+The auctioneer must expose a new RPC namespace called `timeboost` and a RPC method called `timeboost_submitBid`
+
+### `timeboost_submitBid`
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "chain_id": {
+      "type": "uint64",
+      "description": "chain id of the target chain"
+    },
+    "address": {
+      "type": "string",
+      "description": "0x-prefixed, 20-byte address of the bidder"
+    },
+    "round": {
+      "type": "uint64",
+      "description": "round number (0-indexed) for the round being bid on"
+    },
+    "amount": {
+      "type": "uint256",
+      "description": "The amount in wei of the deposit ERC-20 to bid"
+    },
+    "signature": {
+      "type": "string",
+      "description": "0x-prefixed ECDSA signature of an ABI encoded tuple (domainValue, chainId, round, amount)"
+    }
+  },
+  "required": ["chain_id", "address", "round", "amount", "signature"]
+}
+```
+
+The auctioneer will perform the following validation:
+
+- Check if the chain id is correct
+- Check if the round number is for the upcoming round only
+- Check if the sender is a depositor in the contract
+- Check the sender has enough balance to make that bid and that the amount is non-zero
+- Verify the signature
+
+Then, the auctioneer will respond with:
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": ["ERROR", "OK"],
+      "description": "Indicates the response from receiving a new bid."
+    },
+    "error": {
+      "type": "string",
+      "enum": ["MALFORMED_DATA", "NOT_DEPOSITOR", "WRONG_CHAIN_ID", "WRONG_SIGNATURE", "BAD_ROUND_NUMBER", "INSUFFICIENT_BALANCE"],
+      "description": "Description of the error."
+    }
+  },
+  "required": ["status"]
+}
+```
+
+Error types:
+
+- MALFORMED_DATA: wrong input data, failed to deserialize, missing certain fields, etc.
+- NOT_DEPOSITOR: the address is not an active depositor in the auction contract
+- WRONG_CHAIN_ID: wrong chain id for the target chain
+- WRONG_SIGNATURE: signature failed to verify
+- BAD_ROUND_NUMBER: incorrect round, such as one from the past
+- INSUFFICIENT_BALANCE: the bid amount specified in the request is higher than the deposit balance of the depositor in the contract
+
+## Auctioneer Implementation
+
+Rounds, to prevent the need for synchronization, are set to be at the each minute boundary based on unix time. Additionally, the auctioneer operator will have the right to change/rotate the private key by using the `_auctioneerAdmin` and `_auctioneer` roles assigned to them in the auction contract above.
+
+#### Auction State
+
+Add an `expressLaneAuctionState` struct to the sequencer with the following:
+
+```go
+type expressLaneAuctionState {
+}
+```
+
+#### Processing Bids 
+
+#### Delaying Non-Express Lane Txs
+
+## OPTIONAL: Express Lane Client
+
+Requirements:
+
+- Commands for depositing and withdrawing from the express lane auction smart contract
+- Simple CLI to check the balance of the express lane auction contract, number of other depositors, and one’s own balance + subtracted interest over time
+- Checks for auction resolution events and sends fast lane txs automatically if the depositor is the winner of the auction. Notifies by logging that the user won the auction, with other optional notification methods
+- If the user is not the express lane controller, txs will instead be sent over the regular RPC
+
+## Questions
+
+- *Given winners of rounds are announced offchain, as probabilities are computed by the sequencer, do we want to persist the history of round winners somewhere for posterity?*
+- *How many txs per second are expected to be received over the input channel?*
