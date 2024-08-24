@@ -481,7 +481,7 @@ Error types:
 
 ## Auctioneer Implementation
 
-Rounds, to prevent the need for synchronization, are set to be at the each minute boundary based on unix time. Additionally, the auctioneer operator will have the right to change/rotate the private key by using the `_auctioneerAdmin` and `_auctioneer` roles assigned to them in the auction contract above.
+Rounds, to prevent the need for synchronization, are set to be at the each minute boundary based on unix time. 
 
 #### Auction State
 
