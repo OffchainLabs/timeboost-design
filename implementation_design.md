@@ -20,11 +20,11 @@ The auctioneer must expose a new RPC namespace called `auctioneer` and a RPC met
     },
     "expressLaneController": {
       "type": "address",
-      "description": "hex string of the desired express lane controller address"
+      "description": "hex string of the desired express lane controller address, 0x-prefixed"
     },
     "auctionContractAddress": {
       "type": "address",
-      "description": "hex string of the auction contract address that the bid corresponds to"
+      "description": "hex string of the auction contract address that the bid corresponds to, 0x-prefixed"
     },
     "round": {
       "type": "uint64",
@@ -36,7 +36,7 @@ The auctioneer must expose a new RPC namespace called `auctioneer` and a RPC met
     },
     "signature": {
       "type": "bytes",
-      "description": "Ethereum signature over the bytes encoding of (keccak256(TIMEBOOST_BID), padTo32Bytes(chainId), auctionContractAddress, uint64ToBytes(round), padTo32Bytes(amount), expressLaneController)"
+      "description": "Ethereum signature over the bytes encoding of (keccak256(TIMEBOOST_BID), padTo32Bytes(chainId), auctionContractAddress, uint64ToBytes(round), padTo32Bytes(amount), expressLaneController), formatted according to EIP-191 or EIP-712 for clarity"
     }
   },
 }
@@ -93,7 +93,7 @@ The sequencer must expose a new RPC namespace called `timeboost` and a RPC metho
     },
     "round": {
       "type": "uint64",
-      "description": "round number (0-indexed) for the round the bidder wants to become the controller of"
+      "description": "round number (0-indexed) for the round the transaction is submitted for"
     },
     "auctionContractAddress": {
       "type": "address",
@@ -124,9 +124,9 @@ The sequencer will perform the following validation:
 - check if the chain id is correct
 - check if the auction contract address is correct
 - check the current round has an express lane controller
-- check if the bid is intended for the current round
-- verify the signature and recover the sender address
-- verify the sender is the current express lane controller
+- check if the transaction is intended for the current round
+- recover the signer's address
+- verify the signer is the current express lane controller
 - check the sequencer number of the transaction is in-order, otherwise queue for later. The sequence number is the per-round nonce for express lane submissions, starting at 0, maintained by the sequencer in-memory. If a sequence number is 0, and an express lane controller sends a message with number 3, it will get queued until it can get processed
 
 Then, the sequencer will respond with:
