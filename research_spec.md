@@ -4,7 +4,7 @@ The “target chain” is the chain for which we want to implement time boost.
 
 “Governance” is the governance system for the target chain. For example, for Arbitrum One this would be the Arbitrum DAO.
 
-The “deposit token” is an ERC-20 token on the target chain, designated by governance. This would likely be ARB for the Arbitrum One and Arbitrum Nova chains.
+The “deposit token” is an ERC-20 token on the target chain, designated by governance. This would likely be Wrapped ETH for the Arbitrum One and Arbitrum Nova chains, as was [voted on by Arbitrum DAO](https://snapshot.org/#/arbitrumfoundation.eth/proposal/0xffe9bb38228fdaf3d121140856fd2d51c2ca7f8e0d1021c07e791cebb541129a).
 
 The "reserved address" is an address on the target chain which is used by the protocol. This address cannot be used for any other purpose, so it should be chosen in a way that will not collide with ordinary EOA or contract addresses.
 
