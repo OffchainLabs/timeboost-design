@@ -7,7 +7,7 @@
   <h3 align="center">Arbitrum Timeboost</h3>
 
   <p align="center">
-    <a href="https://developer.arbitrum.io/"><strong>TODO FIX LINK »</strong></a>
+    <a href="https://docs.arbitrum.io/how-arbitrum-works/timeboost/gentle-introduction"><strong>Timeboost Documentation »</strong></a>
     <br />
   </p>
 </p>
@@ -19,10 +19,10 @@ Note that the specification for Timeboost with a decentralized sequencer is avai
 #### Resources
 
 **Documentation**
-TODO: Add Gentle Introduction and Decentralized Timeboost Specification 
+* [A gentle introduction to Timeboost](https://docs.arbitrum.io/how-arbitrum-works/timeboost/gentle-introduction)
+* [Timeboost FAQ](https://www.notion.so/arbitrumfoundation/Arbitrum-Timeboost-FAQ-bba234acf92e476b8ca5db6855d7da45)
 
 **Press Releases**
-TODO: Add blogs, including Espresso joint marketing 
-
-**Governance Resources**
-TODO: Add proposals (AIP, Forum Post, Snapshot Vote) and governance call recordings 
+* [Timeboost for beginners](https://medium.com/offchainlabs/timeboost-for-beginners-offchain-labs-latest-transaction-ordering-policy-protocol-10310f445c81)
+* [Debunking Common Misconceptions about Timeboost](https://medium.com/offchainlabs/debunking-common-misconceptions-about-timeboost-92d937568494)
+* [Decentralized Sequencing Timeboost Announcement](https://medium.com/offchainlabs/offchain-labs-espresso-systems-transaction-ordering-technology-to-ethereum-rollups-798b5562eae0)
